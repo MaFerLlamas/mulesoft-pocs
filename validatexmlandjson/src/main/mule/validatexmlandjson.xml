@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xml-module="http://www.mulesoft.org/schema/mule/xml-module" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/xml-module http://www.mulesoft.org/schema/mule/xml-module/current/mule-xml-module.xsd">
+	<http:listener-config name="HTTP_Validation_Endpoint_Listener_config" doc:name="HTTP Listener config" doc:id="6db172f2-4c0d-4636-9600-993b1ca7eb9b" basePath="validate" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<global-property doc:name="Global Property" doc:id="4b80e0ad-2fcc-4266-ba29-a58dfcdd33b7" name="env" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="ccb52d4c-8f64-4982-896f-9af7c99e598c" file="config-${env}.yaml" />
+	<xml-module:config name="XML_Config" doc:name="XML Config" doc:id="c9d17e13-6f44-40bd-94a8-960701dc4577" />
+	<flow name="validate-json-flow" doc:id="c78a022f-cd8c-4452-958d-0fe9ebfce58c" >
+		<http:listener doc:name="POST: /validate/json" doc:id="3c5d0811-7abd-42d1-983d-f6861f8398c8" config-ref="HTTP_Validation_Endpoint_Listener_config" path="/json" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Log before transform" doc:id="b2af884e-5504-467a-922a-e26d9a92a807" message="#[payload]"/>
+		<json:validate-schema doc:name="Validate Json" doc:id="5d8c547f-659b-4d8e-b795-a08b68e3de51" schema="schemas/jsonSchema.json">
+			<json:schema-redirects />
+		</json:validate-schema>
+		<ee:transform doc:name="To Json" doc:id="30eb2c74-2dc0-4f52-9e5b-c6ea7678848c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log  after transform" doc:id="2eca3cb5-c557-4496-9827-926c7a286d7f" message="#[payload]"/>
+	</flow>
+	<flow name="validate-xml-flow" doc:id="21e5a61b-ca3f-49b4-b407-c0ec07247d72" >
+		<http:listener doc:name="POST: /validate/xml" doc:id="0de86f52-b6f0-47dc-9416-44a0699b5f2f" config-ref="HTTP_Validation_Endpoint_Listener_config" path="/xml" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Log before transform" doc:id="91d2a165-a92e-4788-8beb-a039a4025c61" message="#[payload]" />
+		<xml-module:validate-schema doc:name="Validate XML" doc:id="93bfe8c1-287d-4165-9672-51dbf67d81b6" config-ref="XML_Config" schemas="schemas/xmlSchema.xsd"/>
+		<ee:transform doc:name="To XML" doc:id="01a89236-5bbd-41fa-9c98-7e54067fdcd4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log  after transform" doc:id="138d7120-b030-4c92-b2b2-7c9087ed037f" message="#[payload]" />
+	</flow>
+</mule>

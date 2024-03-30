@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "3adea54e-3ecd-445d-9325-dd3d0768b955",
+		"name": "Mule Validate Schema",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31693300"
+	},
+	"item": [
+		{
+			"name": "Validate JSON & XML",
+			"item": [
+				{
+					"name": "Validate JSON",
+					"item": [
+						{
+							"name": "Validate Schema JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Jhon Doe\",\r\n    \"age\": \"28\",\r\n    \"profession\": \"Doctor\",\r\n    \"address\": {\r\n        \"city\": \"Dallas\",\r\n        \"state\": \"TX\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST}}:{{PORT}}/validate/json",
+									"protocol": "http",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"validate",
+										"json"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Error, Missing required Name",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"age\": \"28\",\r\n    \"profession\": \"Doctor\",\r\n    \"address\": {\r\n        \"city\": \"Dallas\",\r\n        \"state\": \"TX\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST}}:{{PORT}}/validate/json",
+									"protocol": "http",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"validate",
+										"json"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "This request are for testing the JSON schema for Mule,\n\ninside you would find 2 request, one is successful & the other one is missing a required field \"name\",  \nFeel free to experiment\n\nHOST & PORT are defined as variables in the Collection Mule Validation Schema"
+				},
+				{
+					"name": "Validate XML",
+					"item": [
+						{
+							"name": "Validate Schema JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<shiporder orderid=\"889923\"\r\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\nxsi:noNamespaceSchemaLocation=\"shiporder.xsd\">\r\n  <orderperson>John Smith</orderperson>\r\n  <shipto>\r\n    <name>Ola Nordmann</name>\r\n    <address>Langgt 23</address>\r\n    <city>4000 Stavanger</city>\r\n    <country>Norway</country>\r\n  </shipto>\r\n  <item>\r\n    <title>Empire Burlesque</title>\r\n    <note>Special Edition</note>\r\n    <quantity>1</quantity>\r\n    <price>10.90</price>\r\n  </item>\r\n  <item>\r\n    <title>Hide your heart</title>\r\n    <quantity>1</quantity>\r\n    <price>9.90</price>\r\n  </item>\r\n</shiporder>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST}}:{{PORT}}/validate/xml",
+									"protocol": "http",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"validate",
+										"xml"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Error, Missing required orderperson",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<shiporder orderid=\"889923\"\r\nxmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\nxsi:noNamespaceSchemaLocation=\"shiporder.xsd\">\r\n \r\n  <shipto>\r\n    <name>Ola Nordmann</name>\r\n    <address>Langgt 23</address>\r\n    <city>4000 Stavanger</city>\r\n    <country>Norway</country>\r\n  </shipto>\r\n  <item>\r\n    <title>Empire Burlesque</title>\r\n    <note>Special Edition</note>\r\n    <quantity>1</quantity>\r\n    <price>10.90</price>\r\n  </item>\r\n  <item>\r\n    <title>Hide your heart</title>\r\n    <quantity>1</quantity>\r\n    <price>9.90</price>\r\n  </item>\r\n</shiporder>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST}}:{{PORT}}/validate/xml",
+									"protocol": "http",
+									"host": [
+										"{{HOST}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"validate",
+										"xml"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "This request are for testing the XML schema for Mule,\n\ninside you would find 2 request, one is successful & the other one is missing a required field \"orderperson\",  \nFeel free to experiment\n\nHOST & PORT are defined as variables in the Collection Mule Validation Schema"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "PORT",
+			"value": "8081",
+			"type": "string"
+		}
+	]
+}
